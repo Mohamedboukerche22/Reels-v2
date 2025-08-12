@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}@{{ user.username }} - Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="profile-avatar mb-3">
+                        {% if user.avatar_url %}
+                        <img src="{{ user.avatar_url }}" alt="Avatar" class="rounded-circle" width="100" height="100">
+                        {% else %}
+                        <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: var(--primary-color); color: white; font-size: 24px; margin: 0 auto;">
+                            {{ user.username[0].upper() }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-gradient">@{{ user.username }}</h3>
+                    <p class="text-muted">{{ user.full_name }}</p>
+                    
+                    {% if user.bio %}
+                    <p class="bio">{{ user.bio }}</p>
+                    {% endif %}
+                    
+                    <div class="profile-stats row text-center mt-4">
+                        <div class="col-4">
+                            <h5>{{ videos|length }}</h5>
+                            <small class="text-muted">Videos</small>
+                        </div>
+                        <div class="col-4">
+                            <h5>{{ user.followers_count }}</h5>
+                            <small class="text-muted">Followers</small>
+                        </div>
+                        <div class="col-4">
+                            <h5>{{ user.following_count }}</h5>
+                            <small class="text-muted">Following</small>
+                        </div>
+                    </div>
+                    
+                    {% if current_user.id != user.id %}
+                    <button class="btn btn-gradient mt-3" id="follow-btn" data-user-id="{{ user.id }}">
+                        Follow
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="profile-videos">
+                <h4 class="mb-4">Videos</h4>
+                
+                {% if videos %}
+                <div class="row">
+                    {% for video in videos %}
+                    <div class="col-md-4 mb-4">
+                        <div class="video-thumbnail" data-video-id="{{ video.id }}">
+                            <video class="w-100 rounded" style="height: 200px; object-fit: cover;">
+                                <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
+                            </video>
+                            
+                            <div class="video-overlay-mini">
+                                <div class="video-stats">
+                                    <span><i class="fas fa-heart"></i> {{ video.likes_count }}</span>
+                                    <span><i class="fas fa-comment"></i> {{ video.comments_count }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="video-info-mini">
+                                <h6>{{ video.title }}</h6>
+                                <small class="text-muted">{{ video.created_at|datetime }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-video fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No videos yet</h5>
+                    {% if current_user.id == user.id %}
+                    <p class="text-muted">Start creating amazing content!</p>
+                    <a href="{{ url_for('upload_video') }}" class="btn btn-gradient">Upload Your First Video</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.video-thumbnail {
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.video-overlay-mini {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.video-stats span {
+    color: white;
+    font-size: 12px;
+    margin-right: 8px;
+}
+
+.video-stats i {
+    margin-right: 2px;
+}
+
+.video-info-mini {
+    padding: 8px 0;
+}
+
+.video-info-mini h6 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bio {
+    color: var(--text-color);
+    font-style: italic;
+    margin: 15px 0;
+}
+
+.profile-stats h5 {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+</style>
+{% endblock %}
