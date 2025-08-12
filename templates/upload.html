@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Video - Moh-Reels{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Video</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="upload-form">
+                        <div class="mb-3">
+                            <label for="video" class="form-label">Video File *</label>
+                            <input type="file" class="form-control" id="video" name="video" 
+                                   accept=".mp4,.webm,.mov,.avi" required>
+                            <div class="form-text">Supported formats: MP4, WebM, MOV, AVI. Max size: 100MB</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                   placeholder="Give your video a catchy title..." maxlength="255" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"
+                                      placeholder="Tell us about your video..."></textarea>
+                        </div>
+                        
+                        <div class="upload-preview" id="upload-preview" style="display: none;">
+                            <h6>Preview:</h6>
+                            <video id="preview-video" controls style="max-width: 100%; height: 300px;">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="upload-btn">
+                                <i class="fas fa-upload"></i> Upload Video
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="upload-progress" id="upload-progress" style="display: none;">
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <p class="text-center">Uploading your video...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('video').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const preview = document.getElementById('upload-preview');
+        const previewVideo = document.getElementById('preview-video');
+        
+        const url = URL.createObjectURL(file);
+        previewVideo.src = url;
+        preview.style.display = 'block';
+    }
+});
+
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    const uploadBtn = document.getElementById('upload-btn');
+    const uploadProgress = document.getElementById('upload-progress');
+    
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    uploadProgress.style.display = 'block';
+});
+</script>
+{% endblock %}
