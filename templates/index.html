@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Moh-Reels - Your Video Feed{% endblock %}
+
+{% block content %}
+<div class="reels-container">
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2>Moh-Reels</h2>
+        </div>
+        <div class="sidebar-nav">
+            <a href="{{ url_for('index') }}" class="nav-item active">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('upload_video') }}" class="nav-item">
+                <i class="fas fa-plus-circle"></i> Upload
+            </a>
+            <a href="{{ url_for('user_profile', username=current_user.username) }}" class="nav-item">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="{{ url_for('logout') }}" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="reels-feed" id="reels-feed">
+            {% for video in videos %}
+            <div class="reel-item" data-video-id="{{ video.id }}">
+                <div class="video-container">
+                    <video class="reel-video" 
+                           src="{{ url_for('serve_video', filename=video.filename) }}"
+                           muted
+                           loop
+                           preload="metadata">
+                        Your browser does not support the video tag.
+                    </video>
+                    
+                    <div class="video-overlay">
+                        <div class="video-info">
+                            <div class="user-info">
+                                <strong>@{{ video.user.username }}</strong>
+                                <p>{{ video.user.full_name }}</p>
+                            </div>
+                            <div class="video-details">
+                                <h3>{{ video.title }}</h3>
+                                {% if video.description %}
+                                <p class="description">{{ video.description }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="video-actions">
+                            <button class="action-btn like-btn" data-video-id="{{ video.id }}">
+                                <i class="far fa-heart"></i>
+                                <span class="count">{{ video.likes_count }}</span>
+                            </button>
+                            <button class="action-btn comment-btn" data-video-id="{{ video.id }}">
+                                <i class="far fa-comment"></i>
+                                <span class="count">{{ video.comments_count }}</span>
+                            </button>
+                            <button class="action-btn share-btn" data-video-id="{{ video.id }}">
+                                <i class="far fa-share-square"></i>
+                                <span class="count">{{ video.shares_count }}</span>
+                            </button>
+                            <div class="views-count">
+                                <i class="fas fa-eye"></i>
+                                <span>{{ video.views_count }}</span>
+                            </div>
