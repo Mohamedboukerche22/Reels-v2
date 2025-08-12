@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Moh-Reels{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Moh-Reels</h1>
+            <p>Create your account</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <input type="text" class="form-control" name="username" 
+                       placeholder="Username" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" class="form-control" name="email" 
+                       placeholder="Email address" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-control" name="full_name" 
+                       placeholder="Full name" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" 
+                       placeholder="Password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                Sign Up
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
